@@ -102,21 +102,11 @@ function setupCombinedBuffer(){
         */
     ];
 
-    var numberTriangles = 100;
-    var r = 0.5;
-    for (i = 0; i <= numberTriangles; i++){
 
-                points.push(r*Math.cos(i*Math.PI/(numberTriangles*2)));
-                points.push(r*Math.sin(i*Math.PI/(numberTriangles*2)));
-                points.push(Math.random());
-                points.push(Math.random());
-                points.push(Math.random());
-                points.push(Math.random());
-    }
 
 
     gl.bindBuffer(gl.ARRAY_BUFFER, combinedBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 }
 
 
@@ -124,7 +114,7 @@ function startup(){
     canvas = document.getElementById("gameCanvas");
     gl = createGLContext(canvas);
     initGL();
-    //drawAnimated(Date.now());
+    drawAnimated(Date.now());
 }
 
 function createGLContext(canvas){
@@ -154,18 +144,19 @@ function drawAnimated(timeStamp){
 }
 
 function draw(){
+
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.bindBuffer(gl.ARRAY_BUFFER, combinedBuffer);
-    gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 24, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(aVertexPositionID);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, combinedBuffer);
+    /*gl.bindBuffer(gl.ARRAY_BUFFER, combinedBuffer);
     gl.vertexAttribPointer(uColorPositionId, 4, gl.FLOAT, false, 24, 8);
-    gl.enableVertexAttribArray(uColorPositionId);
+    gl.enableVertexAttribArray(uColorPositionId);*/
 
 
     //gl.uniform4f(uColorPositionId, 1.0, 1.0, 0.0, 1.0) ;
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, 100);
+    //gl.drawArrays(gl.TRIANGLE_STRIP, 0, 100);
     //gl.uniform4f(uColorPositionId, 0.0, 0.0, 0.0, 1.0) ;
-   // gl.drawArrays(gl.TRIANGLE_STRIP, 4, 4);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 4, 4);
 }
