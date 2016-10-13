@@ -39,12 +39,15 @@ function setupBuffers(){
         0.5,0,
         0,0.5,
         0.5,0.5,
+        0,0,
 
         //Second square positioned bottom left
-        -0.5,-0.5,
+
+        0,0,
+        -0.5,-0,
         0, -0.5,
-        -0.5,-1,
-        0, -1
+        -0.5,-0.5,
+        0, 0
 
     ];
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -158,5 +161,5 @@ function draw(){
     //gl.uniform4f(uColorPositionId, 1.0, 1.0, 0.0, 1.0) ;
     //gl.drawArrays(gl.TRIANGLE_STRIP, 0, 100);
     //gl.uniform4f(uColorPositionId, 0.0, 0.0, 0.0, 1.0) ;
-    gl.drawArrays(gl.TRIANGLE_STRIP, 4, 4);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 9);
 }
