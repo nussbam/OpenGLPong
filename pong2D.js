@@ -42,9 +42,9 @@ function setupLeftBuffer(){
     var vertices = [
         //First square positioned top right
         0,0,
-        20,0,
-        0,20,
-        20,20,
+        15,0,
+        0,70,
+        15,70,
         0,0,
 
         //Second square positioned bottom left
@@ -62,9 +62,9 @@ function setupRightBuffer(){
     var vertices = [
         //First square positioned top right
         0,0,
-        20,0,
-        0,20,
-        20,20,
+        15,0,
+        0,70,
+        15,70,
         0,0,
 
         //Second square positioned bottom left
@@ -102,9 +102,9 @@ function setupBallBuffer(){
     var vertices = [
         //First square positioned top right
         0,0,
-        20,0,
-        0,20,
-        20,20,
+        15,0,
+        0,15,
+        15,15,
         0,0,
 
         //Second square positioned bottom left
@@ -278,13 +278,25 @@ function draw(){
     gl.uniformMatrix4fv(uModelViewMatrix,false,temp);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-
     gl.bindBuffer(gl.ARRAY_BUFFER, playerLeftBuffer);
+    gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(aVertexPositionID);
+    mat4.translate(temp,orthoMatrix,[15,150,0]);
+    gl.uniformMatrix4fv(uModelViewMatrix,false,temp);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, playerRightBuffer);
+    gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(aVertexPositionID);
+    mat4.translate(temp,orthoMatrix,[770,350,0]);
+    gl.uniformMatrix4fv(uModelViewMatrix,false,temp);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, ballBuffer);
     gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(aVertexPositionID);
     mat4.translate(temp,orthoMatrix,[0,0,0]);
     gl.uniformMatrix4fv(uModelViewMatrix,false,temp);
-
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
 
@@ -299,5 +311,5 @@ function draw(){
     //gl.uniform4f(uColorPositionId, 1.0, 1.0, 0.0, 1.0) ;
     //gl.drawArrays(gl.TRIANGLE_STRIP, 0, 100);
     //gl.uniform4f(uColorPositionId, 0.0, 0.0, 0.0, 1.0) ;
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    //gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
