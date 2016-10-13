@@ -16,6 +16,7 @@ var colorBuffer;
 var combinedBuffer;
 var shaderProgram;
 var uColorPositionId ;
+var uModelViewMatrix;
 
 /**
  * Connects the shader-variables with javascript.
@@ -23,7 +24,7 @@ var uColorPositionId ;
 function setupAttributes(){
     aVertexPositionID = gl.getAttribLocation(shaderProgram, "aVertexPosition");
     uColorPositionId =  gl.getAttribLocation(shaderProgram , "aColor") ;
-
+    uModelViewMatrix = gl.getUniformLocation(shaderProgram,"uModelViewMatrix");
 }
 
 /**
@@ -152,6 +153,10 @@ function draw(){
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(aVertexPositionID);
+
+    var matrix = mat4.create();
+    var value = mat4.fromTranslation(matrix,[0,0,0]);
+    gl.uniformMatrix4fv(uModelViewMatrix,false,value);
 
     /*gl.bindBuffer(gl.ARRAY_BUFFER, combinedBuffer);
     gl.vertexAttribPointer(uColorPositionId, 4, gl.FLOAT, false, 24, 8);
