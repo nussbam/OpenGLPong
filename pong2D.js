@@ -12,6 +12,7 @@ var canvas;
 var gl;
 var aVertexPositionID;
 var buffer;
+var karthBuffer;
 var colorBuffer;
 var combinedBuffer;
 var shaderProgram;
@@ -25,6 +26,32 @@ function setupAttributes(){
     aVertexPositionID = gl.getAttribLocation(shaderProgram, "aVertexPosition");
     uColorPositionId =  gl.getAttribLocation(shaderProgram , "aColor") ;
     uModelViewMatrix = gl.getUniformLocation(shaderProgram,"uModelViewMatrix");
+}
+
+
+
+
+/**
+ * Fills the buffer with values to draw two squares.
+ * Allowed vertices-values are in the default grid between -1 and 1.
+ */
+function setupKarthBuffers(){
+    karthBuffer = gl.createBuffer();
+
+    var vertices = [
+        //First square positioned top right
+        0,0,
+        20,0,
+        0,20,
+        20,20,
+        0,0,
+
+        //Second square positioned bottom left
+
+
+    ];
+    gl.bindBuffer(gl.ARRAY_BUFFER, karthBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 }
 
 /**
@@ -138,6 +165,7 @@ function initGL(){
     setupBuffers();
     setupBufferColor();
     setupCombinedBuffer();
+    setupKarthBuffers();
 }
 
 function drawAnimated(timeStamp){
@@ -150,13 +178,16 @@ function drawAnimated(timeStamp){
 function draw(){
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, karthBuffer);
     gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(aVertexPositionID);
 
-    var matrix = mat4.create();
-    var value = mat4.fromTranslation(matrix,[0,0,0]);
-    gl.uniformMatrix4fv(uModelViewMatrix,false,value);
+    var orthoMatrix = mat4.create();
+    var temp = mat4.create();
+    mat4.ortho(orthoMatrix,0,800,0,600,1,0);
+    mat4.translate(temp,orthoMatrix,[0,0,0]);
+   // var value = mat4.fromTranslation(orthoMatrix,[0,0,0]);
+    gl.uniformMatrix4fv(uModelViewMatrix,false,orthoMatrix);
 
     /*gl.bindBuffer(gl.ARRAY_BUFFER, combinedBuffer);
     gl.vertexAttribPointer(uColorPositionId, 4, gl.FLOAT, false, 24, 8);
@@ -166,5 +197,5 @@ function draw(){
     //gl.uniform4f(uColorPositionId, 1.0, 1.0, 0.0, 1.0) ;
     //gl.drawArrays(gl.TRIANGLE_STRIP, 0, 100);
     //gl.uniform4f(uColorPositionId, 0.0, 0.0, 0.0, 1.0) ;
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 9);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
