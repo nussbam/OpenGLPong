@@ -13,11 +13,16 @@ var gl;
 var aVertexPositionID;
 var buffer;
 var karthBuffer;
+var playerLeftBuffer;
+var playerRightBuffer;
+var middleLineBuffer;
+var ballBuffer;
 var colorBuffer;
 var combinedBuffer;
 var shaderProgram;
 var uColorPositionId ;
 var uModelViewMatrix;
+var orthoMatrix;
 
 /**
  * Connects the shader-variables with javascript.
@@ -30,6 +35,85 @@ function setupAttributes(){
 
 
 
+function setupLeftBuffer(){
+
+    playerLeftBuffer = gl.createBuffer();
+
+    var vertices = [
+        //First square positioned top right
+        0,0,
+        20,0,
+        0,20,
+        20,20,
+        0,0,
+
+        //Second square positioned bottom left
+
+
+    ];
+    gl.bindBuffer(gl.ARRAY_BUFFER, playerLeftBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+}
+
+function setupRightBuffer(){
+
+    playerRightBuffer = gl.createBuffer();
+
+    var vertices = [
+        //First square positioned top right
+        0,0,
+        20,0,
+        0,20,
+        20,20,
+        0,0,
+
+        //Second square positioned bottom left
+
+
+    ];
+    gl.bindBuffer(gl.ARRAY_BUFFER, playerRightBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+}
+
+function setupMiddleLineBuffer(){
+
+    middleLineBuffer = gl.createBuffer();
+
+    var vertices = [
+        //First square positioned top right
+        398,0,
+        402,0,
+        398,800,
+        402,800,
+        398,0,
+
+        //Second square positioned bottom left
+
+
+    ];
+    gl.bindBuffer(gl.ARRAY_BUFFER, middleLineBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+}
+
+function setupBallBuffer(){
+
+    ballBuffer = gl.createBuffer();
+
+    var vertices = [
+        //First square positioned top right
+        0,0,
+        20,0,
+        0,20,
+        20,20,
+        0,0,
+
+        //Second square positioned bottom left
+
+
+    ];
+    gl.bindBuffer(gl.ARRAY_BUFFER, ballBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+}
 
 /**
  * Fills the buffer with values to draw two squares.
@@ -157,15 +241,23 @@ function createGLContext(canvas){
 }
 
 function initGL(){
-    gl.clearColor(1,0,0,1);
+    gl.clearColor(0,0,0,0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     shaderProgram = loadAndCompileShaders(gl,"VertexShader.shader","FragmentShader.shader");
     setupAttributes();
-    setupBuffers();
+    setupRightBuffer();
+    setupLeftBuffer();
+    setupMiddleLineBuffer();
+    setupBallBuffer();
+    orthoMatrix = mat4.create();
+    mat4.ortho(orthoMatrix,0,800,0,600,1,0);
+
+
+    /*setupBuffers();
     setupBufferColor();
     setupCombinedBuffer();
-    setupKarthBuffers();
+    setupKarthBuffers();*/
 }
 
 function drawAnimated(timeStamp){
@@ -176,18 +268,28 @@ function drawAnimated(timeStamp){
 }
 
 function draw(){
-
+    var temp = mat4.create();
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.bindBuffer(gl.ARRAY_BUFFER, karthBuffer);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, middleLineBuffer);
     gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(aVertexPositionID);
-
-    var orthoMatrix = mat4.create();
-    var temp = mat4.create();
-    mat4.ortho(orthoMatrix,0,800,0,600,1,0);
     mat4.translate(temp,orthoMatrix,[0,0,0]);
-   // var value = mat4.fromTranslation(orthoMatrix,[0,0,0]);
-    gl.uniformMatrix4fv(uModelViewMatrix,false,orthoMatrix);
+    gl.uniformMatrix4fv(uModelViewMatrix,false,temp);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, playerLeftBuffer);
+    gl.vertexAttribPointer(aVertexPositionID, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(aVertexPositionID);
+    mat4.translate(temp,orthoMatrix,[0,0,0]);
+    gl.uniformMatrix4fv(uModelViewMatrix,false,temp);
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+
+
+
 
     /*gl.bindBuffer(gl.ARRAY_BUFFER, combinedBuffer);
     gl.vertexAttribPointer(uColorPositionId, 4, gl.FLOAT, false, 24, 8);
